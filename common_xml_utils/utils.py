@@ -2,6 +2,7 @@
 structures"""
 
 import xml.etree.ElementTree as ET
+from siptools.xml.namespaces import METS_NS
 
 
 def indent(elem, level=0):
@@ -60,3 +61,31 @@ def write_xml(output_file, root_element):
 
     with output_file.open('w') as outfile:
         outfile.write(serialize(root_element))
+
+
+def serialize(root_element):
+    """Serialize ElementTree structure with PREMIS namespace mapping.
+
+    This modifies the default "ns0:tag" style prefixes to "premis:tag"
+    prefixes.
+
+    :element: Starting element to serialize
+    :returns: Serialized XML as string
+
+    """
+
+    def register_namespace(prefix, uri):
+        """foo"""
+        ns_map = getattr(ET, '_namespace_map')
+        ns_map[uri] = prefix
+
+    # FIXME: No iter_ns() in siptools.xml.namespaces
+    namespaces =  siptools.xml.namespaces.iter_ns()
+
+    for namespace in namespaces:
+        register_namespace('mets', METS_NS)
+
+    siptools.xml.xmlutil.indent(root_element)
+
+    return ET.tostring(root_element)
+
