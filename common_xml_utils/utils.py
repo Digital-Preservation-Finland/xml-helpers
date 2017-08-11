@@ -2,7 +2,6 @@
 structures"""
 
 import xml.etree.ElementTree as ET
-from siptools.xml.namespaces import METS_NS
 
 
 def indent(elem, level=0):
@@ -28,64 +27,31 @@ def indent(elem, level=0):
             elem.tail = i
 
 
-def read_xml(input_file):
-    """Read PREMIS data dictionary from XML file and return it as ElementTree
-    DOM.
-
-    TODO: Note this has Luigi dependency. Move these to better Luigi-specific
-    class as preservation.premis and preservation.xml modules should be as
-    generic as possible.
-
-    :input_file: Luigi LocalTarget with open() method
-    :returns: PREMIS Data Dictionary as ElementTree DOM
-
-    """
-    with input_file.open() as infile:
-        return ET.parse(infile.name)
-
-
-def write_xml(output_file, root_element):
-    """write PREMIS data dictionary from ElementTree DOM to XML file.
-
-    TODO: Note this has dependency to preservation.premis and luigi. Move this
-    function to some Luigi/premis spesific module.
-
-
-    Modules preservation.premis and preservation.xml modules should be as
-    generic as possible.
-
-    :input_file: Luigi LocalTarget with open() method
-    :returns: PREMIS Data Dictionary as ElementTree DOM
-
-    """
-
-    with output_file.open('w') as outfile:
-        outfile.write(serialize(root_element))
-
-
-def serialize(root_element):
+def serialize(root_element, namespaces):
     """Serialize ElementTree structure with PREMIS namespace mapping.
 
     This modifies the default "ns0:tag" style prefixes to "premis:tag"
     prefixes.
 
     :element: Starting element to serialize
+    :namespaces: Namespaces as dict "prefix:namespace"
     :returns: Serialized XML as string
 
     """
+    # We can't serialize an ElementTree, so serialize the tree's
+    # root Element instead
+    if isinstance(root_element, ET.ElementTree):
+        root_element = root_element.getroot()
 
-    def register_namespace(prefix, uri):
-        """foo"""
-        ns_map = getattr(ET, '_namespace_map')
-        ns_map[uri] = prefix
+    register_namespaces(namespaces)
+    indent(root_element)
 
-    # FIXME: No iter_ns() in siptools.xml.namespaces
-    namespaces =  siptools.xml.namespaces.iter_ns()
+    return ET.tostring(root_element, encoding='utf8')
 
-    for namespace in namespaces:
-        register_namespace('mets', METS_NS)
 
-    siptools.xml.xmlutil.indent(root_element)
-
-    return ET.tostring(root_element)
+def register_namespaces(namespaces):
+    """Register given namespaces
+    """
+    for prefix, name in namespaces.items():
+        ET.register_namespace(prefix, name)
 
