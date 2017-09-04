@@ -1,6 +1,7 @@
 """Utility functions for handling XML data with xml.etree.ElementTree data
 structures"""
 
+import re
 import xml.etree.ElementTree as ET
 
 
@@ -54,4 +55,10 @@ def register_namespaces(namespaces):
     """
     for prefix, name in namespaces.items():
         ET.register_namespace(prefix, name)
+
+
+def get_namespace(elem):
+    """return xml element's namespace"""
+    m = re.match('\{.*\}', elem.tag)
+    return m.group(0) if m else ''
 
