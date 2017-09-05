@@ -5,6 +5,9 @@ import re
 import xml.etree.ElementTree as ET
 
 
+XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance'
+
+
 def indent(elem, level=0):
     """Add indentation for the ElementTree elements
 
@@ -47,7 +50,7 @@ def serialize(root_element, namespaces):
     register_namespaces(namespaces)
     indent(root_element)
 
-    return ET.tostring(root_element, encoding='utf8')
+    return ET.tostring(root_element, encoding='UTF-8')
 
 
 def register_namespaces(namespaces):
@@ -62,3 +65,14 @@ def get_namespace(elem):
     m = re.match('\{.*\}', elem.tag)
     return m.group(0) if m else ''
 
+
+def xsi_ns(tag):
+    """Prefix ElementTree tags with XSI namespace.
+
+    object -> {http://..}object
+
+    :tag: Tag name as string
+    :returns: Prefixed tag
+
+    """
+    return '{%s}%s' % (XSI_NS, tag)
