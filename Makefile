@@ -14,7 +14,7 @@ test:
 	py.test -svvvv --junitprefix=common-xml-utils --junitxml=junit.xml tests
 
 coverage:
-	py.test tests --cov=common-xml-utils --cov-report=html
+	py.test tests --cov=common_xml_utils --cov-report=html
 	coverage report -m
 	coverage html
 	coverage xml
