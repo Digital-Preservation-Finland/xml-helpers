@@ -1,7 +1,7 @@
 """Test for XML utils"""
 
 import xml.etree.ElementTree as ET
-import common_xml_utils.utils as u
+import xml_helpers.utils as u
 
 def test_indent():
     """test indent"""

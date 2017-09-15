@@ -11,10 +11,10 @@ install:
 	cat INSTALLED_FILES | sed 's/^/\//g' >> INSTALLED_FILES
 
 test:
-	py.test -svvvv --junitprefix=common-xml-utils --junitxml=junit.xml tests
+	py.test -svvvv --junitprefix=xml-helpers --junitxml=junit.xml tests
 
 coverage:
-	py.test tests --cov=common_xml_utils --cov-report=html
+	py.test tests --cov=xml_helpers --cov-report=html
 	coverage report -m
 	coverage html
 	coverage xml

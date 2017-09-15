@@ -1,5 +1,5 @@
 """
-Install common-xml-utils
+Install xml-helpers
 """
 
 import os
@@ -7,9 +7,9 @@ from setuptools import setup, find_packages
 
 
 def main():
-    """Install common-xml-utils"""
+    """Install xml-helpers"""
     setup(
-        name='common_xml_utils',
+        name='xml_helpers',
         packages=find_packages(exclude=['tests', 'tests.*']),
         version='0.1')
 
