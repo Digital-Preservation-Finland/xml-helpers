@@ -37,7 +37,7 @@ def serialize(root_element, namespaces):
     This modifies the default "ns0:tag" style prefixes to "premis:tag"
     prefixes.
 
-    :element: Starting element to serialize
+    :root_element: Starting element to serialize
     :namespaces: Namespaces as dict "prefix:namespace"
     :returns: Serialized XML as string
 
