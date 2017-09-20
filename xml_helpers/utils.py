@@ -63,7 +63,7 @@ def register_namespaces(namespaces):
 def get_namespace(elem):
     """return xml element's namespace"""
     m = re.match('\{.*\}', elem.tag)
-    return m.group(0) if m else ''
+    return m.group(0)[1:-1] if m else ''
 
 
 def xsi_ns(tag):

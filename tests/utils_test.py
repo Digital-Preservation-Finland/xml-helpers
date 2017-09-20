@@ -34,7 +34,7 @@ def test_get_namespace():
     ns_map = {'xsi': 'http://www.w3.org/2001/XMLSchema-instance'}
     u.register_namespaces(ns_map)
     elem = ET.Element(u.xsi_ns('a'))
-    assert u.get_namespace(elem) == '{http://www.w3.org/2001/XMLSchema-instance}'
+    assert u.get_namespace(elem) == 'http://www.w3.org/2001/XMLSchema-instance'
 
 def test_xsi_ns():
     """test xsi namespace"""
