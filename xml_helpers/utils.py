@@ -18,7 +18,8 @@ def serialize(root_element):
     :returns: Serialized XML as string
 
     """
-    return ET.tostring(ET.cleanup_namespaces(root_element), pretty_print=True,
+    ET.cleanup_namespaces(root_element)
+    return ET.tostring(root_element, pretty_print=True,
                        xml_declaration=True, encoding='UTF-8')
 
 
