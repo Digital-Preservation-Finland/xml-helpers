@@ -9,7 +9,8 @@ XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance'
 
 def readfile(filename):
     """Read file, remove blanks and comments"""
-    return ET.XMLParser(remove_blank_text=True, remove_comments=True)
+    xmlparser = ET.XMLParser(remove_blank_text=True, remove_comments=True)
+    return ET.parse(filename, parser=xmlparser)
 
 def serialize(root_element):
     """Serialize lxml.etree structure.
