@@ -39,3 +39,33 @@ def xsi_ns(tag):
 
     """
     return '{%s}%s' % (XSI_NS, tag)
+
+
+def compare_trees(tree1, tree2):
+    """Compare two XML trees with ignoring whitespaces
+
+    :tree1: Root element of lxml.etree
+    :tree2: Root element of lxml.etree
+    :returns: True if trees match, otherwise False
+    """
+    if tree1.tag.strip() != tree2.tag.strip(): return False
+    if tree1.text is not None:
+        if tree2.text is None: return False
+        if tree1.text.strip() != tree2.text.strip(): return False
+    else:
+        if tree2.text is not None: return False
+    if tree1.tail is not None:
+        if tree2.tail is None: return False
+        if tree1.tail.strip() != tree2.tail.strip(): return False
+    else:
+        if tree2.tail is not None: return False
+    if set(tree1.attrib.keys()) != set(tree2.attrib.keys()): return False
+    for attr_key, attr_value in tree1.attrib.iteritems():
+        if attr_value is not None:
+            if attr_key not in tree2.attrib: return False
+            if attr_value.strip() != tree2.attrib[attr_key].strip(): return False
+        else:
+            if attr_key in tree2.attrib: return False
+    if len(tree1) != len(tree2): return False
+    return all(compare_trees(c1, c2) for c1, c2 in zip(tree1, tree2))
+
