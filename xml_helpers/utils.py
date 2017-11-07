@@ -69,3 +69,27 @@ def compare_trees(tree1, tree2):
     if len(tree1) != len(tree2): return False
     return all(compare_trees(c1, c2) for c1, c2 in zip(tree1, tree2))
 
+
+def decode_utf8(text):
+    """Change UTF-8 encoded ASCII to Unicode.
+    Return input unchanged, if Unicode given.
+
+    :text: ASCII or Unicode string
+    :returns: Unicode string
+    """
+    if not isinstance(text, unicode):
+        text = text.decode('utf-8')
+    return text
+
+
+def encode_utf8(text):
+    """Change Unicode to UTF-8 encoded ASCII.
+    Return input unchanged, if ASCII given.
+
+    :text: Unicode or ASCII string
+    :returns: ASCII string
+    """
+    if isinstance(text, unicode):
+        text = text.encode('utf-8')
+    return text
+
