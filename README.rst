@@ -1,5 +1,5 @@
-XML Libbrary
-============
+XML Library
+===========
 
 This repository contains Python functions for general XML handling.
 
