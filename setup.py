@@ -1,8 +1,5 @@
-"""
-Install xml-helpers
-"""
+"""Install xml-helpers"""
 
-import os
 from setuptools import setup, find_packages
 
 
@@ -11,7 +8,9 @@ def main():
     setup(
         name='xml_helpers',
         packages=find_packages(exclude=['tests', 'tests.*']),
-        version='0.1')
+        version='0.1',
+        install_requires=['lxml']
+    )
 
 
 if __name__ == '__main__':
