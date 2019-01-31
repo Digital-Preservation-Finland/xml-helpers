@@ -1,6 +1,7 @@
 """Utility functions for handling XML data with lxml.etree data
 structures"""
 
+import datetime
 import lxml.etree as ET
 
 
@@ -11,6 +12,7 @@ def readfile(filename):
     """Read file, remove blanks and comments"""
     xmlparser = ET.XMLParser(remove_blank_text=True, remove_comments=True)
     return ET.parse(filename, parser=xmlparser)
+
 
 def serialize(root_element):
     """Serialize lxml.etree structure.
@@ -27,6 +29,15 @@ def serialize(root_element):
 def get_namespace(elem):
     """return xml element's namespace"""
     return elem.nsmap[elem.prefix]
+
+
+def xml_datetime(date_value):
+    """Converts a python datetime to premis xml datetime."""
+
+    if isinstance(date_value, datetime.datetime):
+        return date_value.isoformat()
+    else:
+        return date_value
 
 
 def xsi_ns(tag):
