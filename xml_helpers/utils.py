@@ -21,8 +21,9 @@ def serialize(root_element):
 
     """
     ET.cleanup_namespaces(root_element)
-    return ET.tostring(root_element, pretty_print=True,
-                       xml_declaration=True, encoding='UTF-8')
+    return decode_utf8(ET.tostring(
+        root_element, pretty_print=True, xml_declaration=True, encoding='UTF-8'
+    ))
 
 
 def get_namespace(elem):
@@ -85,11 +86,11 @@ def compare_trees(tree1, tree2):
 
 
 def decode_utf8(text):
-    """Change UTF-8 encoded ASCII to Unicode.
-    Return input unchanged, if Unicode given.
+    """Change UTF-8 encoded ASCII to UTF-8.
+    Return input unchanged, if error happens.
 
-    :text: ASCII or Unicode string
-    :returns: Unicode string
+    :param text: String
+    :returns: UTF-8 string
     """
     try:
         return text.decode('utf-8')
@@ -99,9 +100,9 @@ def decode_utf8(text):
 
 def encode_utf8(text):
     """Change Unicode to UTF-8 encoded ASCII.
-    Return input unchanged, if ASCII given.
+    Return input unchanged, if error happens.
 
-    :text: Unicode or ASCII string
+    :param text: String
     :returns: ASCII string
     """
     try:
