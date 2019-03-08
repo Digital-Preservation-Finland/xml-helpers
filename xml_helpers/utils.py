@@ -4,7 +4,6 @@ structures"""
 import datetime
 import lxml.etree as ET
 
-
 XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance'
 
 
@@ -59,25 +58,29 @@ def compare_trees(tree1, tree2):
     :tree2: Root element of lxml.etree
     :returns: True if trees match, otherwise False
     """
-    if tree1.tag.strip() != tree2.tag.strip(): return False
-    if tree1.text is not None:
-        if tree2.text is None: return False
-        if tree1.text.strip() != tree2.text.strip(): return False
-    else:
-        if tree2.text is not None: return False
-    if tree1.tail is not None:
-        if tree2.tail is None: return False
-        if tree1.tail.strip() != tree2.tail.strip(): return False
-    else:
-        if tree2.tail is not None: return False
-    if set(tree1.attrib.keys()) != set(tree2.attrib.keys()): return False
+    if set(tree1.attrib.keys()) != set(tree2.attrib.keys()) or (
+            len(tree1) != len(tree2)):
+        return False
+
+    for attr in ('tag', 'text', 'tail'):
+        attr1_val = getattr(tree1, attr)
+        attr2_val = getattr(tree2, attr)
+        try:
+            if attr1_val.strip() != attr2_val.strip():
+                return False
+        except AttributeError:
+            # AttributeError takes place if None value is being stripped.
+            if attr1_val != attr2_val:
+                return False
+
     for attr_key, attr_value in tree1.attrib.iteritems():
-        if attr_value is not None:
-            if attr_key not in tree2.attrib: return False
-            if attr_value.strip() != tree2.attrib[attr_key].strip(): return False
-        else:
-            if attr_key in tree2.attrib: return False
-    if len(tree1) != len(tree2): return False
+        try:
+            if attr_value.strip() != tree2.attrib[attr_key].strip():
+                return False
+        except KeyError:
+            # KeyError takes place if tree2 lacks attr_key-index.
+            return False
+
     return all(compare_trees(c1, c2) for c1, c2 in zip(tree1, tree2))
 
 
@@ -88,9 +91,10 @@ def decode_utf8(text):
     :text: ASCII or Unicode string
     :returns: Unicode string
     """
-    if not isinstance(text, unicode):
-        text = text.decode('utf-8')
-    return text
+    try:
+        return text.decode('utf-8')
+    except (UnicodeDecodeError, AttributeError):
+        return text
 
 
 def encode_utf8(text):
@@ -100,7 +104,7 @@ def encode_utf8(text):
     :text: Unicode or ASCII string
     :returns: ASCII string
     """
-    if isinstance(text, unicode):
-        text = text.encode('utf-8')
-    return text
-
+    try:
+        return text.encode('utf-8')
+    except (UnicodeEncodeError, AttributeError):
+        return text
