@@ -7,8 +7,8 @@ import xml_helpers.utils as u
 def test_serialize():
     """test serialize"""
     xml = '<a:x xmlns:a="b"><a:y/></a:x>'
-    ser_xml = ('<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n'
-               '<a:x xmlns:a="b">\n  <a:y/>\n</a:x>\n')
+    ser_xml = (b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n'
+               b'<a:x xmlns:a="b">\n  <a:y/>\n</a:x>\n')
     result = u.serialize(ET.fromstring(xml))
     assert result == ser_xml
 
