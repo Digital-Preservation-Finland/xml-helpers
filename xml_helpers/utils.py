@@ -3,6 +3,7 @@ structures"""
 
 import datetime
 import lxml.etree as ET
+import six
 
 XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance'
 
@@ -21,8 +22,10 @@ def serialize(root_element):
 
     """
     ET.cleanup_namespaces(root_element)
-    return ET.tostring(root_element, pretty_print=True,
-                       xml_declaration=True, encoding='UTF-8')
+    return six.ensure_str(
+        ET.tostring(root_element, pretty_print=True, xml_declaration=True,
+                    encoding='UTF-8')
+    )
 
 
 def get_namespace(elem):
