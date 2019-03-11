@@ -1,10 +1,10 @@
 """Test for XML utils"""
 
+from datetime import datetime
 import lxml.etree as ET
 import pytest
 
 import xml_helpers.utils as u
-from datetime import datetime
 
 
 def test_readfile_utf8(utf8_file):
