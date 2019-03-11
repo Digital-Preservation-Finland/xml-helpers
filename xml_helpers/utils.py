@@ -23,8 +23,10 @@ def serialize(root_element):
     """
     ET.cleanup_namespaces(root_element)
     return six.ensure_str(
-        ET.tostring(root_element, pretty_print=True, xml_declaration=True,
-                    encoding='UTF-8')
+        ET.tostring(
+            root_element, pretty_print=True, xml_declaration=True,
+            encoding='UTF-8'
+        )
     )
 
 
@@ -35,11 +37,9 @@ def get_namespace(elem):
 
 def xml_datetime(date_value):
     """Converts a python datetime to premis xml datetime."""
-
     if isinstance(date_value, datetime.datetime):
         return date_value.isoformat()
-    else:
-        return date_value
+    return date_value
 
 
 def xsi_ns(tag):
@@ -77,11 +77,7 @@ def compare_trees(tree1, tree2):
                 return False
 
     for attr_key, attr_value in tree1.attrib.iteritems():
-        try:
-            if attr_value.strip() != tree2.attrib[attr_key].strip():
-                return False
-        except KeyError:
-            # KeyError takes place if tree2 lacks attr_key-index.
+        if attr_value.strip() != tree2.attrib[attr_key].strip():
             return False
 
     return all(compare_trees(c1, c2) for c1, c2 in zip(tree1, tree2))
@@ -95,8 +91,8 @@ def decode_utf8(text):
     :returns: Unicode string
     """
     try:
-        return text.decode('utf-8')
-    except (UnicodeDecodeError, AttributeError):
+        return six.ensure_text(text)
+    except TypeError:
         return text
 
 
@@ -108,6 +104,6 @@ def encode_utf8(text):
     :returns: ASCII string
     """
     try:
-        return text.encode('utf-8')
-    except (UnicodeEncodeError, AttributeError):
+        return six.ensure_str(text)
+    except TypeError:
         return text

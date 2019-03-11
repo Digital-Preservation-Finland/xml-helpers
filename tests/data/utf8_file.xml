@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<voices>
+    <voice language="English" iso-639-1="en" iso-639-2="eng">voice</voice>
+    <voice language="Finnish" iso-639-1="fi" iso-639-2="fin">ääni</voice>
+    <voice language="Japanese" iso-639-1="ja" iso-639-2="jpn">声</voice>
+    <voice language="Russia" iso-639-1="ru" iso-639-2="rus">глас</voice>
+    <voice language="Chinese" iso-639-1="zh" iso-639-2="zho">語音</voice>
+    <voice language="Vietnamese" iso-639-1="vi" iso-639-2="vie">
+        tiếng nói
+    </voice>
+</voices>
