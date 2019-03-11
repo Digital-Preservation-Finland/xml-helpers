@@ -20,7 +20,7 @@ Source0:        %{file_prefix}-v%{file_version}%{?file_release_tag}-%{file_build
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       python python-lxml
+Requires:       python python-lxml python-six
 BuildRequires:  python-setuptools
 
 %description

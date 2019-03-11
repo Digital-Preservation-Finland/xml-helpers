@@ -10,7 +10,7 @@ def main():
         name='xml_helpers',
         packages=find_packages(exclude=['tests', 'tests.*']),
         version=get_version(),
-        install_requires=['lxml']
+        install_requires=['lxml', 'six']
     )
 
 
