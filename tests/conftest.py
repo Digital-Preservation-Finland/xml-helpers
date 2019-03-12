@@ -7,7 +7,7 @@ import pytest
 
 @pytest.fixture(scope='session')
 def utf8_file():
-    """Returns XML file path with ISO-8859-1 set as charset."""
+    """Returns XML file path with UTF-8 set as charset."""
     return os.path.join(os.path.dirname(__file__), 'data', 'utf8_file.xml')
 
 
