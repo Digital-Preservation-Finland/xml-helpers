@@ -17,7 +17,7 @@ def compare_tree_xml():
     return CompareTrees
 
 
-class CompareTrees():
+class CompareTrees:
     """To contain various different XML-content for testing purposes."""
 
     @classmethod
