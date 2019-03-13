@@ -1,6 +1,7 @@
 """Test for XML utils"""
 
 from datetime import datetime
+from io import open
 import lxml.etree as ET
 import pytest
 
@@ -66,7 +67,7 @@ def test_compare_trees(compare_tree_xml, xml, expected):
 ])
 def test_decode_encode_utf8_file(utf8_file, func):
     """Test that decode_utf8/encode_utf8 doesn't break."""
-    with open(utf8_file, 'r') as in_file:
+    with open(utf8_file, 'rb') as in_file:
         func(in_file.read())
 
     assert func(123456789) == 123456789
