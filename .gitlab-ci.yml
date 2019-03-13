@@ -18,6 +18,16 @@ unit-test:
   except:
     - master
 
+unit-test-python27:
+  stage: local-test
+  tags:
+    - docker
+  script:
+    - 'unit-test-virtualenv.sh'
+  allow_failure: true
+  except:
+    - master
+
 unit-test-python36:
   stage: local-test
   script:
@@ -25,7 +35,6 @@ unit-test-python36:
   allow_failure: true
   except:
     - master
-
 
 e2e-localhost-preservation:
   stage: local-test
