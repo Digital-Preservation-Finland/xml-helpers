@@ -30,6 +30,8 @@ unit-test-python27:
 
 unit-test-python36:
   stage: local-test
+  tags:
+    - docker
   script:
     - 'unit-test-virtualenv.sh python36'
   allow_failure: true
