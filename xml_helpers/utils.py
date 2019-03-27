@@ -22,7 +22,7 @@ def serialize(root_element):
 
     """
     ET.cleanup_namespaces(root_element)
-    return six.ensure_str(
+    return _ensure_str(
         ET.tostring(
             root_element, pretty_print=True, xml_declaration=True,
             encoding='UTF-8'
@@ -91,7 +91,7 @@ def decode_utf8(text):
     :returns: Unicode string
     """
     try:
-        return six.ensure_text(text)
+        return _ensure_text(text)
     except TypeError:
         return text
 
@@ -104,70 +104,53 @@ def encode_utf8(text):
     :returns: ASCII string
     """
     try:
-        return six.ensure_str(text)
+        return _ensure_str(text)
     except TypeError:
         return text
 
 
-# pylint: disable=invalid-name, no-else-return
-# These pylint warnings were from the original six-developer.
-def _patch_six():
-    """Ensure the given six-package contains the mandatory
-    ensure_text- and ensure_str-functions.
+def _ensure_text(s, encoding='utf-8', errors='strict'):
+    """Coerce *s* to six.text_type.
+
+    For Python 2:
+      - `unicode` -> `unicode`
+      - `str` -> `unicode`
+
+    For Python 3:
+      - `str` -> `str`
+      - `bytes` -> decoded to `str`
+
+    Direct copy from release 1.12::
+
+        https://github.com/benjaminp/six/blob/master/six.py#L892
     """
-
-    def _ensure_text(s, encoding='utf-8', errors='strict'):
-        """Coerce *s* to six.text_type.
-
-        For Python 2:
-          - `unicode` -> `unicode`
-          - `str` -> `unicode`
-
-        For Python 3:
-          - `str` -> `str`
-          - `bytes` -> decoded to `str`
-
-        Direct copy from release 1.12::
-
-            https://github.com/benjaminp/six/blob/master/six.py#L892
-        """
-        if isinstance(s, six.binary_type):
-            return s.decode(encoding, errors)
-        elif isinstance(s, six.text_type):
-            return s
-        else:
-            raise TypeError("not expecting type '%s'" % type(s))
-
-    def _ensure_str(s, encoding='utf-8', errors='strict'):
-        """Coerce *s* to `str`.
-
-        For Python 2:
-          - `unicode` -> encoded to `str`
-          - `str` -> `str`
-
-        For Python 3:
-          - `str` -> `str`
-          - `bytes` -> decoded to `str`
-
-        Direct copy from release 1.12::
-
-            https://github.com/benjaminp/six/blob/master/six.py#L892
-        """
-        if not isinstance(s, (six.text_type, six.binary_type)):
-            raise TypeError("not expecting type '%s'" % type(s))
-        if six.PY2 and isinstance(s, six.text_type):
-            s = s.encode(encoding, errors)
-        elif six.PY3 and isinstance(s, six.binary_type):
-            s = s.decode(encoding, errors)
+    if isinstance(s, six.binary_type):
+        return s.decode(encoding, errors)
+    elif isinstance(s, six.text_type):
         return s
-
-    six_funcs = {
-        'ensure_text': _ensure_text,
-        'ensure_str': _ensure_str
-    }
-    for attr_name, new_func in six_funcs.items():
-        if not hasattr(six, attr_name):
-            setattr(six, attr_name, new_func)
+    else:
+        raise TypeError("not expecting type '%s'" % type(s))
 
 
-_patch_six()
+def _ensure_str(s, encoding='utf-8', errors='strict'):
+    """Coerce *s* to `str`.
+
+    For Python 2:
+      - `unicode` -> encoded to `str`
+      - `str` -> `str`
+
+    For Python 3:
+      - `str` -> `str`
+      - `bytes` -> decoded to `str`
+
+    Direct copy from release 1.12::
+
+        https://github.com/benjaminp/six/blob/master/six.py#L892
+    """
+    if not isinstance(s, (six.text_type, six.binary_type)):
+        raise TypeError("not expecting type '%s'" % type(s))
+    if six.PY2 and isinstance(s, six.text_type):
+        s = s.encode(encoding, errors)
+    elif six.PY3 and isinstance(s, six.binary_type):
+        s = s.decode(encoding, errors)
+    return s
