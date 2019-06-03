@@ -23,6 +23,7 @@ ehthumbs.db
 Thumbs.db
 rpmbuild
 .venv/
+.tox
 junit*.xml
 htmlcov/
 coverage.xml
