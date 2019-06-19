@@ -23,6 +23,7 @@ ehthumbs.db
 Thumbs.db
 rpmbuild
 .venv/
+venv*/
 .tox
 junit*.xml
 htmlcov/

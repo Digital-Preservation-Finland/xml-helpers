@@ -113,10 +113,12 @@ def decode_utf8(text):
     :text: ASCII or Unicode string
     :returns: Unicode string
     """
-    try:
-        return _ensure_text(text)
-    except TypeError:
+    if isinstance(text, six.binary_type):
+        return text.decode("utf-8")
+    elif isinstance(text, six.text_type):
         return text
+    else:
+        raise TypeError("Expected a (byte) string, got {}".format(type(text)))
 
 
 def encode_utf8(text):
@@ -124,12 +126,14 @@ def encode_utf8(text):
     Return input unchanged, if ASCII given.
 
     :text: Unicode or ASCII string
-    :returns: ASCII string
+    :returns: ASCII byte string
     """
-    try:
-        return _ensure_str(text)
-    except TypeError:
+    if isinstance(text, six.text_type):
+        return text.encode("utf-8")
+    elif isinstance(text, six.binary_type):
         return text
+    else:
+        raise TypeError("Expected a (byte) string, got {}".format(type(text)))
 
 
 def _ensure_text(s, encoding='utf-8', errors='strict'):

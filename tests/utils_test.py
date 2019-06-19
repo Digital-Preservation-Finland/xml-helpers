@@ -1,3 +1,4 @@
+# coding=utf-8
 """Test for XML utils"""
 
 from datetime import datetime
@@ -71,3 +72,11 @@ def test_decode_encode_utf8_file(utf8_file, func):
         func(in_file.read())
 
     assert func(123456789) == 123456789
+
+
+def test_encode_utf8():
+    assert u.decode_utf8(b't\xc3\xa4hti') == u"tähti"
+
+
+def test_decode_utf8():
+    assert u.encode_utf8(u"tähti") == b't\xc3\xa4hti'
