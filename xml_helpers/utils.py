@@ -28,7 +28,7 @@ import datetime
 import lxml.etree as ET
 import six
 
-XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance'
+XSI_NS = u'http://www.w3.org/2001/XMLSchema-instance'
 
 
 def readfile(filename):
@@ -41,11 +41,11 @@ def serialize(root_element):
     """Serialize lxml.etree structure.
 
     :root_element: Starting element to serialize
-    :returns: Serialized XML as string
+    :returns: Serialized XML as byte string
 
     """
     ET.cleanup_namespaces(root_element)
-    return _ensure_str(
+    return six.binary_type(
         ET.tostring(
             root_element, pretty_print=True, xml_declaration=True,
             encoding='UTF-8'
@@ -74,7 +74,7 @@ def xsi_ns(tag):
     :returns: Prefixed tag
 
     """
-    return '{%s}%s' % (XSI_NS, tag)
+    return u'{%s}%s' % (XSI_NS, tag)
 
 
 def compare_trees(tree1, tree2):
@@ -88,7 +88,7 @@ def compare_trees(tree1, tree2):
             len(tree1) != len(tree2)):
         return False
 
-    for attr in ('tag', 'text', 'tail'):
+    for attr in (u'tag', u'text', u'tail'):
         attr1_val = getattr(tree1, attr)
         attr2_val = getattr(tree2, attr)
         try:

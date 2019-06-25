@@ -28,9 +28,9 @@ def test_xml_datetime_exception():
 
 def test_serialize():
     """test serialize"""
-    xml = '<a:x xmlns:a="b"><a:y/></a:x>'
-    ser_xml = ('<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n'
-               '<a:x xmlns:a="b">\n  <a:y/>\n</a:x>\n')
+    xml = b'<a:x xmlns:a="b"><a:y/></a:x>'
+    ser_xml = (b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n'
+               b'<a:x xmlns:a="b">\n  <a:y/>\n</a:x>\n')
     result = u.serialize(ET.fromstring(xml))
     assert result == ser_xml
 
@@ -70,8 +70,6 @@ def test_decode_encode_utf8_file(utf8_file, func):
     """Test that decode_utf8/encode_utf8 doesn't break."""
     with open(utf8_file, 'rb') as in_file:
         func(in_file.read())
-
-    assert func(123456789) == 123456789
 
 
 def test_encode_utf8():
