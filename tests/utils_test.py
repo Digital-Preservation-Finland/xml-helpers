@@ -1,11 +1,12 @@
 # coding=utf-8
 """Test for XML utils"""
+from __future__ import unicode_literals
 
 from datetime import datetime
 from io import open
+
 import lxml.etree as ET
 import pytest
-
 import xml_helpers.utils as u
 
 
@@ -28,7 +29,7 @@ def test_xml_datetime_exception():
 
 def test_serialize():
     """test serialize"""
-    xml = b'<a:x xmlns:a="b"><a:y/></a:x>'
+    xml = '<a:x xmlns:a="b"><a:y/></a:x>'
     ser_xml = (b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n'
                b'<a:x xmlns:a="b">\n  <a:y/>\n</a:x>\n')
     result = u.serialize(ET.fromstring(xml))
@@ -72,9 +73,19 @@ def test_decode_encode_utf8_file(utf8_file, func):
         func(in_file.read())
 
 
-def test_encode_utf8():
-    assert u.decode_utf8(b't\xc3\xa4hti') == u"tähti"
-
-
 def test_decode_utf8():
-    assert u.encode_utf8(u"tähti") == b't\xc3\xa4hti'
+    """
+    Test that byte strings are decoded to Unicode,
+    while Unicode strings are returned as is
+    """
+    assert u.decode_utf8(b't\xc3\xa4hti') == "tähti"
+    assert u.decode_utf8("tähti") == "tähti"
+
+
+def test_encode_utf8():
+    """
+    Test that Unicode strings are encoded to byte strings using UTF-8,
+    while byte strings are returned as is
+    """
+    assert u.encode_utf8("tähti") == b't\xc3\xa4hti'
+    assert u.encode_utf8(b't\xc3\xa4hti') == b't\xc3\xa4hti'

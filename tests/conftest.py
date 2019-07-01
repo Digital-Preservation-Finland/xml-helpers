@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Fixtures to be used for unit testing."""
+from __future__ import unicode_literals
 
 import os
 import pytest
