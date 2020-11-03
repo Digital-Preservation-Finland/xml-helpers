@@ -3,7 +3,7 @@
 import re
 from setuptools import setup, find_packages
 
-with open('siptools_archives/__init__.py', 'r') as f:
+with open('xml_helpers/__init__.py', 'r') as f:
     version = re.search(r'__version__ = \'(.*?)\'', f.read()).group(1)
 
 
