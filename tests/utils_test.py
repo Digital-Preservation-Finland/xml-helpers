@@ -92,7 +92,7 @@ def test_encode_utf8():
 
 
 def test_construct_temporary_catalog_xml(tmpdir):
-    """Tests that the catalogue has been constructed correctly."""
+    """Tests that the catalog has been constructed correctly."""
     filename = tmpdir.mkdir('test').join('foo.xml')
     base_dir = tmpdir.mkdir('base_catalog')
     rewrite_rules = {

@@ -124,7 +124,7 @@ def construct_temporary_catalog_xml(filename,
         {
             rewrite_uri_start_string: rewrite_uri_rewrite_prefix
         }
-    :returns: Absolute filepath of the created catalogue. None if no catalogue
+    :returns: Absolute filepath of the created catalog. None if no catalog
         entries were written.
     """
     parser = ET.XMLParser(dtd_validation=False, no_network=True)
