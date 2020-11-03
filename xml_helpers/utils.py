@@ -26,9 +26,15 @@ SOFTWARE.
 from __future__ import unicode_literals
 
 import datetime
+import os
+
 import lxml.etree as ET
 import six
 
+CATALOG_TEMPLATE = b"""<!DOCTYPE catalog PUBLIC "-//OASIS//DTD XML Catalogs V1.0//EN" "catalog.dtd">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public" xml:base="./">
+</catalog>
+"""
 XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance'
 
 
@@ -103,6 +109,49 @@ def compare_trees(tree1, tree2):
             return False
 
     return all(compare_trees(c1, c2) for c1, c2 in zip(tree1, tree2))
+
+
+def construct_temporary_catalog_xml(filename,
+                                    base_path,
+                                    rewrite_rules):
+    """Constructs a catalog file filled with given base path and rewrite rules.
+
+    :param filename: Filename to create with.
+    :param base_path: The base path of the catalog. Expected to be directory.
+    :param rewrite_rules: Additional rewrite rules are expected to be in dict
+        format::
+
+        {
+            rewrite_uri_start_string: rewrite_uri_rewrite_prefix
+        }
+    :returns: Absolute filepath of the created catalogue. None if no catalogue
+        entries were written.
+    """
+    parser = ET.XMLParser(dtd_validation=False, no_network=True)
+    catalog_tree = ET.XML(CATALOG_TEMPLATE, parser)
+    entry_added = False
+    for start_string in rewrite_rules:
+        rewrite_prefix = rewrite_rules[start_string]
+        rewrite_element = ET.Element("rewriteURI")
+        rewrite_element.attrib["uriStartString"] = start_string
+        rewrite_element.attrib["rewritePrefix"] = rewrite_prefix
+        catalog_tree.append(rewrite_element)
+        entry_added = True
+
+    if not entry_added:
+        return None
+
+    # We'll set absolute path to the catalog's xml:base and making sure
+    # that it'll end with one ending slash.
+    for key in catalog_tree.attrib:
+        if key.endswith('base'):
+            catalog_tree.attrib[key] = os.path.abspath(base_path).rstrip(
+                '/') + '/'
+            break
+
+    elem_tree = ET.ElementTree(catalog_tree)
+    elem_tree.write(filename)
+    return os.path.abspath(filename)
 
 
 def decode_utf8(text):

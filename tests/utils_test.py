@@ -89,3 +89,27 @@ def test_encode_utf8():
     """
     assert u.encode_utf8("tähti") == b't\xc3\xa4hti'
     assert u.encode_utf8(b't\xc3\xa4hti') == b't\xc3\xa4hti'
+
+
+def test_construct_temporary_catalog_xml(tmpdir):
+    """Tests that the catalogue has been constructed correctly."""
+    filename = tmpdir.mkdir('test').join('foo.xml')
+    base_dir = tmpdir.mkdir('base_catalog')
+    rewrite_rules = {
+        'http://localhost.test/non-existing.xsd': 'definitely-non-existing.xsd'
+    }
+    catalog = u.construct_temporary_catalog_xml(filename=filename.strpath,
+                                                base_path=base_dir.strpath,
+                                                rewrite_rules=rewrite_rules)
+    with open(catalog) as out_file:
+        tree = ET.fromstring(out_file.read())
+
+    for key in tree.attrib:
+        if key.endswith('base'):
+            assert tree.attrib[key].rstrip('/') == base_dir.strpath
+
+    assert len(tree) == len(rewrite_rules)
+    for element in tree:
+        assert 'rewriteURI' in element.tag
+        assert element.attrib['rewritePrefix'] == rewrite_rules[
+            element.attrib['uriStartString']]
