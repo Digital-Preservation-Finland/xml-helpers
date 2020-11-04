@@ -91,16 +91,16 @@ def test_encode_utf8():
     assert u.encode_utf8(b't\xc3\xa4hti') == b't\xc3\xa4hti'
 
 
-def test_construct_temporary_catalog_xml(tmpdir):
+def test_construct_catalog_xml(tmpdir):
     """Tests that the catalog has been constructed correctly."""
     filename = tmpdir.mkdir('test').join('foo.xml')
     base_dir = tmpdir.mkdir('base_catalog')
     rewrite_rules = {
         'http://localhost.test/non-existing.xsd': 'definitely-non-existing.xsd'
     }
-    catalog = u.construct_temporary_catalog_xml(filename=filename.strpath,
-                                                base_path=base_dir.strpath,
-                                                rewrite_rules=rewrite_rules)
+    catalog = u.construct_catalog_xml(filename=filename.strpath,
+                                      base_path=base_dir.strpath,
+                                      rewrite_rules=rewrite_rules)
     with open(catalog) as out_file:
         tree = ET.fromstring(out_file.read())
 

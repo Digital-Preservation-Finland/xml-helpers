@@ -111,9 +111,7 @@ def compare_trees(tree1, tree2):
     return all(compare_trees(c1, c2) for c1, c2 in zip(tree1, tree2))
 
 
-def construct_temporary_catalog_xml(filename,
-                                    base_path,
-                                    rewrite_rules):
+def construct_catalog_xml(filename, base_path, rewrite_rules):
     """Constructs a catalog file filled with given base path and rewrite rules.
 
     :param filename: Filename to create with.
