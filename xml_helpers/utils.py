@@ -111,7 +111,10 @@ def compare_trees(tree1, tree2):
     return all(compare_trees(c1, c2) for c1, c2 in zip(tree1, tree2))
 
 
-def construct_catalog_xml(filename, base_path, rewrite_rules):
+def construct_catalog_xml(filename,
+                          base_path,
+                          rewrite_rules=None,
+                          next_catalogs=None):
     """Constructs a catalog file filled with given base path and rewrite rules.
 
     :param filename: Filename to create with.
@@ -122,20 +125,32 @@ def construct_catalog_xml(filename, base_path, rewrite_rules):
         {
             rewrite_uri_start_string: rewrite_uri_rewrite_prefix
         }
+
+    :param next_catalogs: List of catalog filepaths that this catalog is
+        expected to link to.
     :returns: Absolute filepath of the created catalog. None if no catalog
         entries were written.
     """
     parser = ET.XMLParser(dtd_validation=False, no_network=True)
     catalog_tree = ET.XML(CATALOG_TEMPLATE, parser)
     entry_added = False
-    for start_string in rewrite_rules:
-        rewrite_prefix = rewrite_rules[start_string]
-        rewrite_element = ET.Element("rewriteURI")
-        rewrite_element.attrib["uriStartString"] = start_string
-        rewrite_element.attrib["rewritePrefix"] = rewrite_prefix
-        catalog_tree.append(rewrite_element)
-        entry_added = True
+    if rewrite_rules is not None:
+        for start_string in rewrite_rules:
+            rewrite_prefix = rewrite_rules[start_string]
+            rewrite_element = ET.Element("rewriteURI")
+            rewrite_element.attrib["uriStartString"] = start_string
+            rewrite_element.attrib["rewritePrefix"] = rewrite_prefix
+            catalog_tree.append(rewrite_element)
+            entry_added = True
 
+    if next_catalogs is not None:
+        for catalog in next_catalogs:
+            catalog_element = ET.Element("nextCatalog")
+            catalog_element.attrib["catalog"] = catalog
+            catalog_tree.append(catalog_element)
+            entry_added = True
+
+    # If no entries were given, don't continue and simply return None.
     if not entry_added:
         return None
 

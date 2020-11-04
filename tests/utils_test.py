@@ -91,16 +91,24 @@ def test_encode_utf8():
     assert u.encode_utf8(b't\xc3\xa4hti') == b't\xc3\xa4hti'
 
 
-def test_construct_catalog_xml(tmpdir):
+@pytest.mark.parametrize(('rewrite_rules', 'next_catalogs'), [
+    ({'http://localhost.test/non-existing.xsd': 'definitely-non-existing.xsd'},
+     None),
+    (None, ['does/not/exist.xml', 'non/existing/file.xml']),
+    ({'http://localhost.test/non-existing.xsd': 'definitely-non-existing.xsd',
+      'http://localhost.test/no/schema.xsd': 'no-schema.xsd'},
+     ['does/not/exist.xml', 'non/existing/file.xml']),
+], ids=['With rewrite urls only',
+        'With next catalogs only',
+        'With both'])
+def test_construct_catalog_xml(tmpdir, rewrite_rules, next_catalogs):
     """Tests that the catalog has been constructed correctly."""
     filename = tmpdir.mkdir('test').join('foo.xml')
     base_dir = tmpdir.mkdir('base_catalog')
-    rewrite_rules = {
-        'http://localhost.test/non-existing.xsd': 'definitely-non-existing.xsd'
-    }
     catalog = u.construct_catalog_xml(filename=filename.strpath,
                                       base_path=base_dir.strpath,
-                                      rewrite_rules=rewrite_rules)
+                                      rewrite_rules=rewrite_rules,
+                                      next_catalogs=next_catalogs)
     with open(catalog) as out_file:
         tree = ET.fromstring(out_file.read())
 
@@ -108,8 +116,22 @@ def test_construct_catalog_xml(tmpdir):
         if key.endswith('base'):
             assert tree.attrib[key].rstrip('/') == base_dir.strpath
 
-    assert len(tree) == len(rewrite_rules)
+    rewrite_length = len(rewrite_rules) if rewrite_rules else 0
+    catalog_length = len(next_catalogs) if next_catalogs else 0
+    assert len(tree) == rewrite_length + catalog_length
     for element in tree:
-        assert 'rewriteURI' in element.tag
-        assert element.attrib['rewritePrefix'] == rewrite_rules[
-            element.attrib['uriStartString']]
+        if 'rewriteURI' in element.tag:
+            assert element.attrib['rewritePrefix'] == rewrite_rules[
+                element.attrib['uriStartString']]
+            # Remove the entry from the parameter to signify that we've
+            # evaluated it.
+            del rewrite_rules[element.attrib['uriStartString']]
+        if 'nextCatalog' in element.tag:
+            assert element.attrib['catalog'] in next_catalogs
+            # Remove the entry from the parameter to signify that we've
+            # evaluated it.
+            next_catalogs.remove(element.attrib['catalog'])
+
+    # These two parameters have to be Falsey at the end of the test.
+    assert not rewrite_rules
+    assert not next_catalogs
