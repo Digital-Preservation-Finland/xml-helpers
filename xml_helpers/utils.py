@@ -112,7 +112,7 @@ def compare_trees(tree1, tree2):
 
 
 def construct_catalog_xml(filename,
-                          base_path,
+                          base_path='.',
                           rewrite_rules=None,
                           next_catalogs=None):
     """Constructs a catalog file filled with given base path and rewrite rules.
