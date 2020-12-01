@@ -114,10 +114,11 @@ def parse_catalog_schema_uris(base_path, catalog_relpath, schema_uris=None):
     :param catalog_relpath: The relative path to the catalog file from
                             the base_path
     :returns: A dictionary of schema URIs with uriStartStrings and
-              rewritePrefixes
+              rewritePrefixes (including xml:base)
     """
     namespaces = {
-        'catalog': 'urn:oasis:names:tc:entity:xmlns:xml:catalog'
+        'catalog': 'urn:oasis:names:tc:entity:xmlns:xml:catalog',
+        'xml': 'http://www.w3.org/XML/1998/namespace'
     }
     root = ET.parse(os.path.join(base_path, catalog_relpath)).getroot()
 
@@ -125,8 +126,17 @@ def parse_catalog_schema_uris(base_path, catalog_relpath, schema_uris=None):
         schema_uris = dict()
     for rewrite_uri in root.xpath('//catalog:rewriteURI',
                                   namespaces=namespaces):
-        schema_uris[rewrite_uri.get('uriStartString')] = rewrite_uri.get(
-            'rewritePrefix')
+
+        # Add the xml:base value to the rewritePrefix path if it exists,
+        # use the closest found value, starting from the current node
+        try:
+            xml_base = rewrite_uri.xpath(
+                './ancestor-or-self::*/@xml:base', namespaces=namespaces)[-1]
+        except IndexError:
+            xml_base = ''
+
+        rewrite_path = os.path.join(xml_base, rewrite_uri.get('rewritePrefix'))
+        schema_uris[rewrite_uri.get('uriStartString')] = rewrite_path
 
     # Parse all additional catalog entry files as well, including additional
     # catalog entries listed in the subsequent catalog files that are parsed

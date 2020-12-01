@@ -3,5 +3,5 @@
 <!-- XML Catalog for digital object XML files. -->
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public" xml:base="./schemas_external/">
   <rewriteURI uriStartString="http://secondary_host/xml.xsd" rewritePrefix="secondary_host/xml.xsd"/>
-  <rewriteURI uriStartString="http://third_host/xml.xsd" rewritePrefix="third_host/xml.xsd"/>
+  <rewriteURI xml:base="./schemas_external_two/" uriStartString="http://third_host/xml.xsd" rewritePrefix="third_host/xml.xsd"/>
 </catalog>
