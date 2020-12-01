@@ -89,3 +89,11 @@ def test_encode_utf8():
     """
     assert u.encode_utf8("tähti") == b't\xc3\xa4hti'
     assert u.encode_utf8(b't\xc3\xa4hti') == b't\xc3\xa4hti'
+
+
+def test_parse_catalog_schema_uris():
+    """Tests the parse_catalog_schema_uris function."""
+    uris = u.parse_catalog_schema_uris('tests/data/', 'catalog_main.xml')
+    assert len(uris) == 5
+    assert uris['http://localhost/first_schema.xsd'] == 'first_schema.xsd'
+    assert uris['http://secondary_host/xml.xsd'] == 'secondary_host/xml.xsd'

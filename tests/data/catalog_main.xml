@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE catalog PUBLIC "-//OASIS//DTD XML Catalogs V1.0//EN" "catalog.dtd">
+<!-- XML Catalog for local usage. -->
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+  <group xml:base="./schemas/">
+    <rewriteURI uriStartString="http://localhost/first_schema.xsd" rewritePrefix="first_schema.xsd"/>
+    <rewriteURI uriStartString="http://localhost/second_schema.xsd" rewritePrefix="second_schema.xsd"/>
+    <rewriteURI uriStartString="http://localhost/third_schema.xsd" rewritePrefix="third_schema"/>
+  </group>
+  <nextCatalog catalog="./catalog_external.xml"/>
+</catalog>

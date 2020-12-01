@@ -105,6 +105,46 @@ def compare_trees(tree1, tree2):
     return all(compare_trees(c1, c2) for c1, c2 in zip(tree1, tree2))
 
 
+def parse_catalog_schema_uris(base_path, catalog_relpath):
+    """Parses the schema URIs from a given schema catalog file and its
+    related additional catalog entry files specified in the nextCatalog
+    element.
+
+    :param base_path: The base path of the catalog file location
+    :param catalog_relpath: The relative path to the catalog file from
+                            the base_path
+    :returns: A dictionary of schema URIs with uriStartStrings and
+              rewritePrefixes
+    """
+    def _parse_uris(root, schema_uris):
+        """Parses the uriStartStrings and rewritePrefixes from the
+        root.
+        """
+        for rewrite_uri in root.xpath('//catalog:rewriteURI',
+                                      namespaces=namespaces):
+            schema_uris[rewrite_uri.get('uriStartString')] = rewrite_uri.get(
+                'rewritePrefix')
+        return schema_uris
+
+    namespaces = {
+        'catalog': 'urn:oasis:names:tc:entity:xmlns:xml:catalog'
+    }
+    schema_uris = dict()
+
+    root = ET.parse(os.path.join(base_path, catalog_relpath)).getroot()
+    schema_uris = _parse_uris(root, schema_uris)
+
+    # Parse all additional catalog entry files as well
+    for next_catalog in root.xpath('//catalog:nextCatalog',
+                                   namespaces=namespaces):
+        next_catalog_path = os.path.join(base_path,
+                                         next_catalog.get('catalog'))
+        schema_uris = _parse_uris(ET.parse(next_catalog_path).getroot(),
+                                  schema_uris)
+
+    return schema_uris
+
+
 def decode_utf8(text):
     """Change UTF-8 encoded ASCII to Unicode.
     Return input unchanged, if Unicode given.
