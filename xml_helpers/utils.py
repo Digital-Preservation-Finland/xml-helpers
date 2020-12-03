@@ -36,6 +36,7 @@ CATALOG_TEMPLATE = b"""<!DOCTYPE catalog PUBLIC "-//OASIS//DTD XML Catalogs V1.0
 </catalog>
 """
 XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance'
+XML_NS = 'http://www.w3.org/XML/1998/namespace'
 
 
 def readfile(filename):
@@ -68,6 +69,14 @@ def xml_datetime(date_value):
     if isinstance(date_value, datetime.datetime):
         return date_value.isoformat()
     return date_value
+
+
+def xml_ns(tag):
+    """Tag prefixed with XML namespace
+    :param tag: Tag string to prefix with the namespace.
+    :returns: Prefixed tag
+    """
+    return '{%s}%s' % (XML_NS, tag)
 
 
 def xsi_ns(tag):
@@ -116,11 +125,15 @@ def construct_catalog_xml(filename,
                           rewrite_rules=None,
                           next_catalogs=None):
     """Constructs a catalog file filled with given base path and rewrite rules.
+    For more information how the XML catalog is structured, please see
+    https://xmlcatalogs.org/ .
 
     :param filename: Filename to create with.
     :param base_path: The base path of the catalog. Expected to be directory.
-    :param rewrite_rules: Additional rewrite rules are expected to be in dict
-        format::
+    :param rewrite_rules: Rewrite entries to be added when constructing
+        the catalog. Additional rewrite rules are expected to be in dict
+        format that contains both the uriStartString and rewritePrefix to
+        help construct rewriteURI element::
 
         {
             rewrite_uri_start_string: rewrite_uri_rewrite_prefix
@@ -156,11 +169,8 @@ def construct_catalog_xml(filename,
 
     # We'll set absolute path to the catalog's xml:base and making sure
     # that it'll end with one ending slash.
-    for key in catalog_tree.attrib:
-        if key.endswith('base'):
-            catalog_tree.attrib[key] = os.path.abspath(base_path).rstrip(
-                '/') + '/'
-            break
+    catalog_tree.attrib[xml_ns('base')] = os.path.abspath(base_path).rstrip(
+        '/') + '/'
 
     elem_tree = ET.ElementTree(catalog_tree)
     elem_tree.write(filename)
