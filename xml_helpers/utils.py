@@ -73,6 +73,9 @@ def xml_datetime(date_value):
 
 def xml_ns(tag):
     """Tag prefixed with XML namespace
+
+    tag -> {http://..}tag
+
     :param tag: Tag string to prefix with the namespace.
     :returns: Prefixed tag
     """
@@ -82,9 +85,9 @@ def xml_ns(tag):
 def xsi_ns(tag):
     """Prefix ElementTree tags with XSI namespace.
 
-    object -> {http://..}object
+    tag -> {http://..}tag
 
-    :tag: Tag name as string
+    :param tag: Tag name as string
     :returns: Prefixed tag
 
     """
