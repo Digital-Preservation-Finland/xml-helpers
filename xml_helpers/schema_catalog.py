@@ -22,16 +22,16 @@ def xml_ns(tag):
     return '{%s}%s' % (XML_NS, tag)
 
 
-def construct_catalog_xml(filename,
-                          base_path='.',
+def construct_catalog_xml(base_path='.',
                           rewrite_rules=None,
                           next_catalogs=None):
-    """Constructs a catalog file filled with given base path and rewrite rules.
+    """Constructs a catalog XML object filled with given base path and rewrite
+    rules.
+
     For more information how the XML catalog is structured, please see
     https://xmlcatalogs.org/ .
 
-    :param filename: Filename to create with.
-    :param base_path: The base path of the catalog. Expected to be directory.
+    :param base_path: The base path of the catalog. Expected to be a directory.
     :param rewrite_rules: Rewrite entries to be added when constructing
         the catalog. Additional rewrite rules are expected to be in dict
         format that contains both the uriStartString and rewritePrefix to
@@ -43,12 +43,10 @@ def construct_catalog_xml(filename,
 
     :param next_catalogs: List of catalog filepaths that this catalog is
         expected to link to.
-    :returns: Absolute filepath of the created catalog. None if no catalog
-        entries were written.
+    :returns: ElementTree-object of the catalog with the information provided.
     """
     parser = ET.XMLParser(dtd_validation=False, no_network=True)
     catalog_tree = ET.XML(CATALOG_TEMPLATE, parser)
-    entry_added = False
     if rewrite_rules is not None:
         for start_string in rewrite_rules:
             rewrite_prefix = rewrite_rules[start_string]
@@ -56,27 +54,19 @@ def construct_catalog_xml(filename,
             rewrite_element.attrib["uriStartString"] = start_string
             rewrite_element.attrib["rewritePrefix"] = rewrite_prefix
             catalog_tree.append(rewrite_element)
-            entry_added = True
 
     if next_catalogs is not None:
         for catalog in next_catalogs:
             catalog_element = ET.Element("nextCatalog")
             catalog_element.attrib["catalog"] = catalog
             catalog_tree.append(catalog_element)
-            entry_added = True
-
-    # If no entries were given, don't continue and simply return None.
-    if not entry_added:
-        return None
 
     # We'll set absolute path to the catalog's xml:base and making sure
     # that it'll end with one ending slash.
     catalog_tree.attrib[xml_ns('base')] = os.path.abspath(base_path).rstrip(
         '/') + '/'
 
-    elem_tree = ET.ElementTree(catalog_tree)
-    elem_tree.write(filename)
-    return os.path.abspath(filename)
+    return ET.ElementTree(catalog_tree)
 
 
 def parse_catalog_schema_uris(base_path, catalog_relpath, schema_uris=None):

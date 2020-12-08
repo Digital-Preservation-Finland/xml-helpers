@@ -23,11 +23,13 @@ def test_construct_catalog_xml(tmpdir, rewrite_rules, next_catalogs):
     filename = tmpdir.mkdir('test').join('foo.xml')
     base_dir = tmpdir.mkdir('base_catalog')
     catalog = xml_helpers.schema_catalog.construct_catalog_xml(
-        filename=filename.strpath,
         base_path=base_dir.strpath,
         rewrite_rules=rewrite_rules,
         next_catalogs=next_catalogs)
-    with open(catalog) as out_file:
+    with open(filename.strpath, 'w') as in_file:
+        catalog.write(in_file)
+
+    with open(filename.strpath) as out_file:
         tree = ET.fromstring(out_file.read())
 
     for key in tree.attrib:
