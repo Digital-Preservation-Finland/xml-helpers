@@ -26,17 +26,11 @@ SOFTWARE.
 from __future__ import unicode_literals
 
 import datetime
-import os
 
 import lxml.etree as ET
 import six
 
-CATALOG_TEMPLATE = b"""<!DOCTYPE catalog PUBLIC "-//OASIS//DTD XML Catalogs V1.0//EN" "catalog.dtd">
-<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public" xml:base="./">
-</catalog>
-"""
 XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance'
-XML_NS = 'http://www.w3.org/XML/1998/namespace'
 
 
 def readfile(filename):
@@ -69,17 +63,6 @@ def xml_datetime(date_value):
     if isinstance(date_value, datetime.datetime):
         return date_value.isoformat()
     return date_value
-
-
-def xml_ns(tag):
-    """Tag prefixed with XML namespace
-
-    tag -> {http://..}tag
-
-    :param tag: Tag string to prefix with the namespace.
-    :returns: Prefixed tag
-    """
-    return '{%s}%s' % (XML_NS, tag)
 
 
 def xsi_ns(tag):
@@ -121,63 +104,6 @@ def compare_trees(tree1, tree2):
             return False
 
     return all(compare_trees(c1, c2) for c1, c2 in zip(tree1, tree2))
-
-
-def construct_catalog_xml(filename,
-                          base_path='.',
-                          rewrite_rules=None,
-                          next_catalogs=None):
-    """Constructs a catalog file filled with given base path and rewrite rules.
-    For more information how the XML catalog is structured, please see
-    https://xmlcatalogs.org/ .
-
-    :param filename: Filename to create with.
-    :param base_path: The base path of the catalog. Expected to be directory.
-    :param rewrite_rules: Rewrite entries to be added when constructing
-        the catalog. Additional rewrite rules are expected to be in dict
-        format that contains both the uriStartString and rewritePrefix to
-        help construct rewriteURI element::
-
-        {
-            rewrite_uri_start_string: rewrite_uri_rewrite_prefix
-        }
-
-    :param next_catalogs: List of catalog filepaths that this catalog is
-        expected to link to.
-    :returns: Absolute filepath of the created catalog. None if no catalog
-        entries were written.
-    """
-    parser = ET.XMLParser(dtd_validation=False, no_network=True)
-    catalog_tree = ET.XML(CATALOG_TEMPLATE, parser)
-    entry_added = False
-    if rewrite_rules is not None:
-        for start_string in rewrite_rules:
-            rewrite_prefix = rewrite_rules[start_string]
-            rewrite_element = ET.Element("rewriteURI")
-            rewrite_element.attrib["uriStartString"] = start_string
-            rewrite_element.attrib["rewritePrefix"] = rewrite_prefix
-            catalog_tree.append(rewrite_element)
-            entry_added = True
-
-    if next_catalogs is not None:
-        for catalog in next_catalogs:
-            catalog_element = ET.Element("nextCatalog")
-            catalog_element.attrib["catalog"] = catalog
-            catalog_tree.append(catalog_element)
-            entry_added = True
-
-    # If no entries were given, don't continue and simply return None.
-    if not entry_added:
-        return None
-
-    # We'll set absolute path to the catalog's xml:base and making sure
-    # that it'll end with one ending slash.
-    catalog_tree.attrib[xml_ns('base')] = os.path.abspath(base_path).rstrip(
-        '/') + '/'
-
-    elem_tree = ET.ElementTree(catalog_tree)
-    elem_tree.write(filename)
-    return os.path.abspath(filename)
 
 
 def decode_utf8(text):
