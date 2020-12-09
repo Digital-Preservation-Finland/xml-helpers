@@ -4,22 +4,12 @@ import os
 
 import lxml.etree as ET
 
+from xml_helpers.utils import xml_ns
+
 CATALOG_TEMPLATE = b"""<!DOCTYPE catalog PUBLIC "-//OASIS//DTD XML Catalogs V1.0//EN" "catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public" xml:base="./">
 </catalog>
 """
-XML_NS = 'http://www.w3.org/XML/1998/namespace'
-
-
-def xml_ns(tag):
-    """Tag prefixed with XML namespace
-
-    tag -> {http://..}tag
-
-    :param tag: Tag string to prefix with the namespace.
-    :returns: Prefixed tag
-    """
-    return '{%s}%s' % (XML_NS, tag)
 
 
 def construct_catalog_xml(base_path='.',

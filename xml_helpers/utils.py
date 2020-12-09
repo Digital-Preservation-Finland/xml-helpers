@@ -31,6 +31,7 @@ import lxml.etree as ET
 import six
 
 XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance'
+XML_NS = 'http://www.w3.org/XML/1998/namespace'
 
 
 def readfile(filename):
@@ -75,6 +76,17 @@ def xsi_ns(tag):
 
     """
     return '{%s}%s' % (XSI_NS, tag)
+
+
+def xml_ns(tag):
+    """Tag prefixed with XML namespace
+
+    tag -> {http://..}tag
+
+    :param tag: Tag string to prefix with the namespace.
+    :returns: Prefixed tag
+    """
+    return '{%s}%s' % (XML_NS, tag)
 
 
 def compare_trees(tree1, tree2):
