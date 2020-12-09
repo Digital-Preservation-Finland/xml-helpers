@@ -6,10 +6,8 @@ import lxml.etree as ET
 
 from xml_helpers.utils import xml_ns
 
-CATALOG_TEMPLATE = b"""<!DOCTYPE catalog PUBLIC "-//OASIS//DTD XML Catalogs V1.0//EN" "catalog.dtd">
-<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public" xml:base="./">
-</catalog>
-"""
+# pylint: disable=E501
+CATALOG_DOCTYPE = b'<!DOCTYPE catalog PUBLIC "-//OASIS//DTD XML Catalogs V1.0//EN" "catalog.dtd">'  # noqa: E501
 
 
 def construct_catalog_xml(base_path='.',
@@ -35,28 +33,30 @@ def construct_catalog_xml(base_path='.',
         expected to link to.
     :returns: ElementTree-object of the catalog with the information provided.
     """
-    parser = ET.XMLParser(dtd_validation=False, no_network=True)
-    catalog_tree = ET.XML(CATALOG_TEMPLATE, parser)
+    root = ET.Element('catalog')
+    root.attrib['xmlns'] = 'urn:oasis:names:tc:entity:xmlns:xml:catalog'
+    root.attrib['prefer'] = 'public'
+
+    # We'll set absolute path to the catalog's xml:base and making sure
+    # that it'll end with one ending slash.
+    root.attrib[xml_ns('base')] = os.path.abspath(base_path).rstrip(
+        '/') + '/'
+
     if rewrite_rules is not None:
         for start_string in rewrite_rules:
             rewrite_prefix = rewrite_rules[start_string]
             rewrite_element = ET.Element("rewriteURI")
             rewrite_element.attrib["uriStartString"] = start_string
             rewrite_element.attrib["rewritePrefix"] = rewrite_prefix
-            catalog_tree.append(rewrite_element)
+            root.append(rewrite_element)
 
     if next_catalogs is not None:
         for catalog in next_catalogs:
             catalog_element = ET.Element("nextCatalog")
             catalog_element.attrib["catalog"] = catalog
-            catalog_tree.append(catalog_element)
+            root.append(catalog_element)
 
-    # We'll set absolute path to the catalog's xml:base and making sure
-    # that it'll end with one ending slash.
-    catalog_tree.attrib[xml_ns('base')] = os.path.abspath(base_path).rstrip(
-        '/') + '/'
-
-    return ET.ElementTree(catalog_tree)
+    return ET.ElementTree(root)
 
 
 def parse_catalog_schema_uris(base_path, catalog_relpath, schema_uris=None):

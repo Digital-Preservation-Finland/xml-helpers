@@ -27,7 +27,9 @@ def test_construct_catalog_xml(tmpdir, rewrite_rules, next_catalogs):
         rewrite_rules=rewrite_rules,
         next_catalogs=next_catalogs)
     with open(filename.strpath, 'w') as in_file:
-        catalog.write(in_file)
+        catalog.write(in_file,
+                      xml_declaration=True,
+                      doctype=xml_helpers.schema_catalog.CATALOG_DOCTYPE)
 
     with open(filename.strpath) as out_file:
         tree = ET.fromstring(out_file.read())
