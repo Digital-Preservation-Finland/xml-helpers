@@ -44,8 +44,10 @@ def parse_catalog_schema_uris(base_path, catalog_relpath, schema_uris=None):
     for next_catalog in root.xpath('//catalog:nextCatalog',
                                    namespaces=namespaces):
         next_catalog_relpath = next_catalog.get('catalog')
-        schema_uris = parse_catalog_schema_uris(base_path,
-                                                next_catalog_relpath,
-                                                schema_uris=schema_uris)
+        schema_uris = parse_catalog_schema_uris(
+            base_path=os.path.dirname(os.path.join(base_path,
+                                                   next_catalog_relpath)),
+            catalog_relpath=os.path.basename(next_catalog_relpath),
+            schema_uris=schema_uris)
 
     return schema_uris
