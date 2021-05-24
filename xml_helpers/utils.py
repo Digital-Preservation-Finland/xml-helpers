@@ -148,8 +148,8 @@ def encode_utf8(text):
         raise TypeError("Expected a (byte) string, got {}".format(type(text)))
 
 
-def _ensure_text(s, encoding='utf-8', errors='strict'):
-    """Coerce *s* to six.text_type.
+def ensure_text(text, encoding='utf-8', errors='strict'):
+    """Coerce *text* to six.text_type.
 
     For Python 2:
       - `unicode` -> `unicode`
@@ -165,16 +165,16 @@ def _ensure_text(s, encoding='utf-8', errors='strict'):
 
     Copyright (c) 2018 Benjamin Peterson
     """
-    if isinstance(s, six.binary_type):
-        return s.decode(encoding, errors)
-    elif isinstance(s, six.text_type):
-        return s
+    if isinstance(text, six.binary_type):
+        return text.decode(encoding, errors)
+    elif isinstance(text, six.text_type):
+        return text
     else:
-        raise TypeError("not expecting type '%s'" % type(s))
+        raise TypeError("not expecting type '%s'" % type(text))
 
 
-def _ensure_str(s, encoding='utf-8', errors='strict'):
-    """Coerce *s* to `str`.
+def ensure_str(text, encoding='utf-8', errors='strict'):
+    """Coerce *text* to `str`.
 
     For Python 2:
       - `unicode` -> encoded to `str`
@@ -190,10 +190,10 @@ def _ensure_str(s, encoding='utf-8', errors='strict'):
 
     Copyright (c) 2018 Benjamin Peterson
     """
-    if not isinstance(s, (six.text_type, six.binary_type)):
-        raise TypeError("not expecting type '%s'" % type(s))
-    if six.PY2 and isinstance(s, six.text_type):
-        s = s.encode(encoding, errors)
-    elif six.PY3 and isinstance(s, six.binary_type):
-        s = s.decode(encoding, errors)
-    return s
+    if not isinstance(text, (six.text_type, six.binary_type)):
+        raise TypeError("not expecting type '%s'" % type(text))
+    if six.PY2 and isinstance(text, six.text_type):
+        text = text.encode(encoding, errors)
+    elif six.PY3 and isinstance(text, six.binary_type):
+        text = text.decode(encoding, errors)
+    return text
