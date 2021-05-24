@@ -4,7 +4,7 @@ import os
 
 import lxml.etree as ET
 
-from xml_helpers.utils import xml_ns
+from xml_helpers.utils import ensure_text, xml_ns
 
 # pylint: disable=E501
 CATALOG_DOCTYPE = b'<!DOCTYPE catalog PUBLIC "-//OASIS//DTD XML Catalogs V1.0//EN" "catalog.dtd">'  # noqa: E501
@@ -46,8 +46,10 @@ def construct_catalog_xml(base_path='.',
         for start_string in rewrite_rules:
             rewrite_prefix = rewrite_rules[start_string]
             rewrite_element = ET.Element("rewriteURI")
-            rewrite_element.attrib["uriStartString"] = start_string
-            rewrite_element.attrib["rewritePrefix"] = rewrite_prefix
+            rewrite_element.attrib["uriStartString"] = ensure_text(
+                start_string)
+            rewrite_element.attrib["rewritePrefix"] = ensure_text(
+                rewrite_prefix)
             root.append(rewrite_element)
 
     if next_catalogs is not None:
