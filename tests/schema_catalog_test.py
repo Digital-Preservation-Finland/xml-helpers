@@ -4,21 +4,21 @@ import pytest
 
 import lxml.etree as ET
 
-from xml_helpers.schema_catalog import (CATALOG_DOCTYPE,
-                                        construct_catalog_xml,
+from xml_helpers.schema_catalog import (construct_catalog_xml,
                                         parse_catalog_schema_uris)
 from xml_helpers.utils import ensure_text, serialize
 
 
+# pylint: disable=consider-using-dict-comprehension
 @pytest.mark.parametrize(('rewrite_rules', 'next_catalogs'), [
     ({'http://localhost.test/non-existing.xsd': 'definitely-non-existing.xsd'},
-     None),
-    (None, ['does/not/exist.xml', 'non/existing/file.xml']),
+     {}),
+    ({}, ['does/not/exist.xml', 'non/existing/file.xml']),
     ({'http://localhost.test/non-existing.xsd': 'definitely-non-existing.xsd',
       'http://localhost.test/no/schema.xsd': 'no-schema.xsd'},
      ['does/not/exist.xml', 'non/existing/file.xml']),
     ({'http://localhost.test/nön-existing.xsd': 'definitely-nön-existing.xsd'},
-     None),
+     {}),
 ], ids=['With rewrite urls only',
         'With next catalogs only',
         'With both',
@@ -40,9 +40,7 @@ def test_construct_catalog_xml(tmpdir, rewrite_rules, next_catalogs):
         if key.endswith('base'):
             assert tree.attrib[key].rstrip('/') == base_dir.strpath
 
-    rewrite_length = len(rewrite_rules) if rewrite_rules else 0
-    catalog_length = len(next_catalogs) if next_catalogs else 0
-    assert len(tree) == rewrite_length + catalog_length
+    assert len(tree) == len(rewrite_rules) + len(next_catalogs)
 
     # Ensure that the keys and values of the input dict are text (unless it
     # is None), so that we can compare the input with the output
