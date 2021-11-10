@@ -127,10 +127,11 @@ def decode_utf8(text):
     """
     if isinstance(text, six.binary_type):
         return text.decode("utf-8")
-    elif isinstance(text, six.text_type):
+
+    if isinstance(text, six.text_type):
         return text
-    else:
-        raise TypeError("Expected a (byte) string, got {}".format(type(text)))
+
+    raise TypeError("Expected a (byte) string, got {}".format(type(text)))
 
 
 def encode_utf8(text):
@@ -142,10 +143,11 @@ def encode_utf8(text):
     """
     if isinstance(text, six.text_type):
         return text.encode("utf-8")
-    elif isinstance(text, six.binary_type):
+
+    if isinstance(text, six.binary_type):
         return text
-    else:
-        raise TypeError("Expected a (byte) string, got {}".format(type(text)))
+
+    raise TypeError("Expected a (byte) string, got {}".format(type(text)))
 
 
 def ensure_text(text, encoding='utf-8', errors='strict'):
@@ -167,10 +169,11 @@ def ensure_text(text, encoding='utf-8', errors='strict'):
     """
     if isinstance(text, six.binary_type):
         return text.decode(encoding, errors)
-    elif isinstance(text, six.text_type):
+
+    if isinstance(text, six.text_type):
         return text
-    else:
-        raise TypeError("not expecting type '%s'" % type(text))
+
+    raise TypeError("not expecting type '%s'" % type(text))
 
 
 def ensure_str(text, encoding='utf-8', errors='strict'):

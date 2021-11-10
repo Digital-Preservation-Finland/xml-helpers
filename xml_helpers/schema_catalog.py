@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 """A module containing XML catalog related operations."""
+
 import os
 
 import lxml.etree as ET
 
 from xml_helpers.utils import ensure_text, xml_ns
 
-# pylint: disable=E501
+# pylint: disable=line-too-long
 CATALOG_DOCTYPE = b'<!DOCTYPE catalog PUBLIC "-//OASIS//DTD XML Catalogs V1.0//EN" "catalog.dtd">'  # noqa: E501
 
 
@@ -79,7 +80,7 @@ def parse_catalog_schema_uris(base_path, catalog_relpath, schema_uris=None):
     root = ET.parse(os.path.join(base_path, catalog_relpath)).getroot()
 
     if not schema_uris:
-        schema_uris = dict()
+        schema_uris = {}
     for rewrite_uri in root.xpath('//catalog:rewriteURI',
                                   namespaces=namespaces):
 

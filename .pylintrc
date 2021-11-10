@@ -1,0 +1,9 @@
+[MASTER]
+
+# A comma-separated list of package or module names from where C extensions may
+# be loaded. Extensions are loading into the active Python interpreter and may
+# run arbitrary code.
+extension-pkg-allow-list=lxml.etree
+
+# Python2 does not support f-string formatting
+disable=consider-using-f-string
