@@ -2,6 +2,7 @@ MOCK_CONFIG=stable-7-x86_64
 ROOT=/
 PREFIX=/usr
 ANSIBLE_BRANCH=master
+PYTHON=python3
 
 install:
 	# Cleanup temporary files
@@ -18,15 +19,6 @@ install3:
 	# Use Python setuptools
 	python3 setup.py build ; python3 ./setup.py install -O1 --prefix="${PREFIX}" --root="${ROOT}" --record=INSTALLED_FILES
 	cat INSTALLED_FILES | sed 's/^/\//g' >> INSTALLED_FILES
-
-test:
-	py.test -svvvv --junitprefix=xml-helpers --junitxml=junit.xml tests
-
-coverage:
-	py.test tests --cov=xml_helpers --cov-report=html
-	coverage report -m
-	coverage html
-	coverage xml
 
 clean: clean-rpm
 	find . -iname '*.pyc' -type f -delete
