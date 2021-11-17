@@ -8,3 +8,6 @@ include:
     ref: KDKPAS-2577
     file:
       - '/pipeline/common.yml'
+      - '/pipeline/fddps.yml'
+      - '/pipeline/kppas.yml'
+      - '/pipeline/sapa.yml'
