@@ -5,7 +5,6 @@ variables:
 
 include:
   - project: 'dpres/gitlab-ci-pipeline'
-    ref: KDKPAS-2577
     file:
       - '/pipeline/common.yml'
       - '/pipeline/fddps.yml'
