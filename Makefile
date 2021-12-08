@@ -1,4 +1,3 @@
-MOCK_CONFIG=stable-7-x86_64
 ROOT=/
 PREFIX=/usr
 ANSIBLE_BRANCH=master
@@ -26,16 +25,6 @@ clean: clean-rpm
 
 clean-rpm:
 	rm -rf rpmbuild
-
-rpm: clean-rpm
-	create-archive.sh
-	preprocess-spec-m4-macros.sh include/rhel7
-	build-rpm.sh ${MOCK_CONFIG}
-
-rpm3: clean-rpm
-	create-archive.sh
-	preprocess-spec-m4-macros.sh include/rhel8
-	build-rpm.sh ${MOCK_CONFIG}
 
 e2e-localhost-cleanup: .e2e/ansible-fetch
 	cd .e2e/ansible ; ansible-playbook -i inventory/localhost e2e-pre-test-cleanup.yml
