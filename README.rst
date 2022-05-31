@@ -29,6 +29,9 @@ Install the required software with commands::
     pip install -r requirements_dev.txt
     pip install .
 
+To deactivate the virtual environment, run ``deactivate``.
+To reactivate it, run the ``source`` command above.
+
 Copyright
 ---------
 Copyright (C) 2018 CSC - IT Center for Science Ltd.
