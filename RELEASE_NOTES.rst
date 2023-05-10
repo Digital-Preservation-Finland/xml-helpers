@@ -1,5 +1,9 @@
 Release notes
 =============
+Version 0.14
+------------
+
+- RHEL9 packaging
 
 Version 0.13
 ------------
