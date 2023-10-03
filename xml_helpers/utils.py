@@ -28,7 +28,6 @@ from __future__ import unicode_literals
 import datetime
 
 import lxml.etree as ET
-import six
 
 XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance'
 XML_NS = 'http://www.w3.org/XML/1998/namespace'
@@ -125,10 +124,10 @@ def decode_utf8(text):
     :text: ASCII or Unicode string
     :returns: Unicode string
     """
-    if isinstance(text, six.binary_type):
+    if isinstance(text, bytes):
         return text.decode("utf-8")
 
-    if isinstance(text, six.text_type):
+    if isinstance(text, str):
         return text
 
     raise TypeError("Expected a (byte) string, got {}".format(type(text)))
@@ -141,10 +140,10 @@ def encode_utf8(text):
     :text: Unicode or ASCII string
     :returns: ASCII byte string
     """
-    if isinstance(text, six.text_type):
+    if isinstance(text, str):
         return text.encode("utf-8")
 
-    if isinstance(text, six.binary_type):
+    if isinstance(text, bytes):
         return text
 
     raise TypeError("Expected a (byte) string, got {}".format(type(text)))
@@ -167,10 +166,10 @@ def ensure_text(text, encoding='utf-8', errors='strict'):
 
     Copyright (c) 2018 Benjamin Peterson
     """
-    if isinstance(text, six.binary_type):
+    if isinstance(text, bytes):
         return text.decode(encoding, errors)
 
-    if isinstance(text, six.text_type):
+    if isinstance(text, str):
         return text
 
     raise TypeError("not expecting type '%s'" % type(text))
@@ -193,10 +192,6 @@ def ensure_str(text, encoding='utf-8', errors='strict'):
 
     Copyright (c) 2018 Benjamin Peterson
     """
-    if not isinstance(text, (six.text_type, six.binary_type)):
+    if not isinstance(text, (str, bytes)):
         raise TypeError("not expecting type '%s'" % type(text))
-    if six.PY2 and isinstance(text, six.text_type):
-        text = text.encode(encoding, errors)
-    elif six.PY3 and isinstance(text, six.binary_type):
-        text = text.decode(encoding, errors)
     return text

@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from datetime import datetime
 from io import open
-import six
 
 import lxml.etree as ET
 import pytest
@@ -101,9 +100,7 @@ def test_encode_utf8():
 ])
 def test_ensure_text(text, valid):
     """Tests that ensure_text() returns the expected type."""
-    if valid and six.PY2:
-        assert isinstance(u.ensure_text(text), unicode)
-    elif valid:
+    if valid:
         assert isinstance(u.ensure_text(text), str)
     else:
         with pytest.raises(TypeError):
