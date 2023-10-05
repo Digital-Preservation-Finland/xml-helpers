@@ -194,4 +194,7 @@ def ensure_str(text, encoding='utf-8', errors='strict'):
     """
     if not isinstance(text, (str, bytes)):
         raise TypeError("not expecting type '%s'" % type(text))
+    if isinstance(text, bytes):
+        text = text.decode(encoding, errors)
+
     return text
