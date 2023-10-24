@@ -150,21 +150,7 @@ def encode_utf8(text):
 
 
 def ensure_text(text, encoding='utf-8', errors='strict'):
-    """Coerce *text* to six.text_type.
-
-    For Python 2:
-      - `unicode` -> `unicode`
-      - `str` -> `unicode`
-
-    For Python 3:
-      - `str` -> `str`
-      - `bytes` -> decoded to `str`
-
-    Adapted from release 1.12 under MIT license::
-
-        https://github.com/benjaminp/six/blob/master/six.py#L892
-
-    Copyright (c) 2018 Benjamin Peterson
+    """Coerce *text* to "str".
     """
     if isinstance(text, bytes):
         return text.decode(encoding, errors)
@@ -174,3 +160,14 @@ def ensure_text(text, encoding='utf-8', errors='strict'):
 
     raise TypeError("not expecting type '%s'" % type(text))
 
+
+def ensure_str(text, encoding='utf-8', errors='strict'):
+    """Coerce *text* to `str`.
+    """
+    if not isinstance(text, (str, bytes)):
+        raise TypeError("not expecting type '%s'" % type(text))
+
+    if isinstance(text, bytes):
+        text = text.decode(encoding, errors)
+
+    return text
