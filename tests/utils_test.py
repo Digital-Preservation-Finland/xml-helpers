@@ -104,19 +104,4 @@ def test_ensure_text(text, valid):
         assert isinstance(u.ensure_text(text), str)
     else:
         with pytest.raises(TypeError):
-            u.ensure_str(text)
-
-
-@pytest.mark.parametrize(('text', 'valid'), [
-    ('test string', True),
-    (u'test string', True),
-    (b'test string', True),
-    (1235, False)
-])
-def test_ensure_str(text, valid):
-    """Tests that ensure_str() returns the expected type."""
-    if valid:
-        assert isinstance(u.ensure_str(text), str)
-    else:
-        with pytest.raises(TypeError):
-            u.ensure_str(text)
+            u.ensure_text(text)

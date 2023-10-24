@@ -174,29 +174,3 @@ def ensure_text(text, encoding='utf-8', errors='strict'):
 
     raise TypeError("not expecting type '%s'" % type(text))
 
-
-def ensure_str(text, encoding='utf-8', errors='strict'):
-    """Coerce *text* to `str`.
-
-    For Python 2:
-      - `unicode` -> encoded to `str`
-      - `str` -> `str`
-
-    For Python 3:
-      - `str` -> `str`
-      - `bytes` -> decoded to `str`
-
-    Adapted from release 1.12 under MIT license::
-
-        https://github.com/benjaminp/six/blob/master/six.py#L892
-
-    Copyright (c) 2018 Benjamin Peterson
-    """
-    if not isinstance(text, (str, bytes)):
-        raise TypeError("not expecting type '%s'" % type(text))
-    if isinstance(text, str):
-        text = text.encode(encoding, errors)
-    if isinstance(text, bytes):
-        text = text.decode(encoding, errors)
-
-    return text
