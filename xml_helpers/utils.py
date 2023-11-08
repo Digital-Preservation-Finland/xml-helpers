@@ -137,15 +137,3 @@ def ensure_text(text, encoding='utf-8', errors='strict'):
         return text
 
     raise TypeError("not expecting type '%s'" % type(text))
-
-
-def ensure_str(text, encoding='utf-8', errors='strict'):
-    """Coerce *text* to `str`.
-    """
-    if not isinstance(text, (str, bytes)):
-        raise TypeError("not expecting type '%s'" % type(text))
-
-    if isinstance(text, bytes):
-        text = text.decode(encoding, errors)
-
-    return text
