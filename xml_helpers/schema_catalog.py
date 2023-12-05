@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """A module containing XML catalog related operations."""
 
 import os

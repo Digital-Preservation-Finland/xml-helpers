@@ -1,9 +1,6 @@
-# coding=utf-8
 """Test for XML utils"""
-from __future__ import unicode_literals
 
 from datetime import datetime
-from io import open
 
 import lxml.etree as ET
 import pytest
@@ -94,7 +91,7 @@ def test_encode_utf8():
 
 @pytest.mark.parametrize(('text', 'valid'), [
     ('test string', True),
-    (u'test string', True),
+    ('test string', True),
     (b'test string', True),
     (12345, False)
 ])

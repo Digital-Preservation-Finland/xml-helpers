@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Test schema_catalog-module."""
 import pytest
 
@@ -46,9 +45,9 @@ def test_construct_catalog_xml(tmpdir, rewrite_rules, next_catalogs):
     # is None), so that we can compare the input with the output
     decoded_rules = None
     if rewrite_rules:
-        decoded_rules = dict(
-            [(ensure_text(k),
-              ensure_text(v)) for k, v in rewrite_rules.items()])
+        decoded_rules = {
+            ensure_text(k):
+              ensure_text(v) for k, v in rewrite_rules.items()}
 
     for element in tree:
         if 'rewriteURI' in element.tag:
