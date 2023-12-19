@@ -51,7 +51,7 @@ def xsi_ns(tag):
     :returns: Prefixed tag
 
     """
-    return '{{{}}}{}'.format(XSI_NS, tag)
+    return f'{{{XSI_NS}}}{tag}'
 
 
 def xml_ns(tag):
@@ -62,7 +62,7 @@ def xml_ns(tag):
     :param tag: Tag string to prefix with the namespace.
     :returns: Prefixed tag
     """
-    return '{{{}}}{}'.format(XML_NS, tag)
+    return f'{{{XML_NS}}}{tag}'
 
 
 def compare_trees(tree1, tree2):
@@ -106,8 +106,10 @@ def decode_utf8(text):
 
     if isinstance(text, str):
         return text
+    
+    text_type = type(text)
 
-    raise TypeError(f"Expected a (byte) string, got {type(text)}")
+    raise TypeError(f"Expected a (byte) string, got {text_type}")
 
 
 def encode_utf8(text):
@@ -122,8 +124,10 @@ def encode_utf8(text):
 
     if isinstance(text, bytes):
         return text
+    
+    text_type = type(text)
 
-    raise TypeError(f"Expected a (byte) string, got {type(text)}")
+    raise TypeError(f"Expected a (byte) string, got {text_type}")
 
 
 def ensure_text(text, encoding='utf-8', errors='strict'):
