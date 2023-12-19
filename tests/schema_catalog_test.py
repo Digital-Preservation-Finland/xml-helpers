@@ -46,7 +46,7 @@ def test_construct_catalog_xml(tmpdir, rewrite_rules, next_catalogs):
     decoded_rules = None
     if rewrite_rules:
         decoded_rules = {
-            ensure_text(k):ensure_text(v) for k, v in rewrite_rules.items()}
+            ensure_text(k): ensure_text(v) for k, v in rewrite_rules.items()}
 
     for element in tree:
         if 'rewriteURI' in element.tag:
