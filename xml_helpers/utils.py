@@ -106,7 +106,7 @@ def decode_utf8(text):
 
     if isinstance(text, str):
         return text
-    
+
     text_type = type(text)
 
     raise TypeError(f"Expected a (byte) string, got {text_type}")
@@ -124,7 +124,7 @@ def encode_utf8(text):
 
     if isinstance(text, bytes):
         return text
-    
+
     text_type = type(text)
 
     raise TypeError(f"Expected a (byte) string, got {text_type}")
