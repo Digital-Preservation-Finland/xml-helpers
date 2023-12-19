@@ -91,7 +91,6 @@ def test_encode_utf8():
 
 @pytest.mark.parametrize(('text', 'valid'), [
     ('test string', True),
-    ('test string', True),
     (b'test string', True),
     (12345, False)
 ])
