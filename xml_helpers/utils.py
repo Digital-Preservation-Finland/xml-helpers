@@ -140,3 +140,26 @@ def ensure_text(text, encoding='utf-8', errors='strict'):
         return text
 
     raise TypeError("not expecting type '%s'" % type(text))
+
+
+def iter_elements(filename):
+    """
+    Iterate through all elements in xml tree.
+
+    :yields: elements
+    """
+    stack = []
+    events = ["start", "end"]
+
+    for event, element in ET.iterparse(filename, events=events):
+
+        if event == 'start':
+            stack.append(element)
+            continue
+
+        stack.pop()
+
+        yield element
+
+        if stack:
+            stack[-1].remove(element)
