@@ -3,11 +3,27 @@ XML Library
 
 This repository contains Python functions for general XML handling.
 
-Installation
+
+Requirements
 ------------
 
-Installation and usage requires Python 3.6 or newer.
-The software is tested with Python 3.6 on Centos 7.x release.
+Installation and usage requires Python 3.9 or newer.
+The software is tested with Python 3.9 on AlmaLinux 9 release.
+
+Installation using RPM packages (preferred)
+-------------------------------------------
+
+Installation on Linux distributions is done by using the RPM Package Manager.
+See how to `configure the PAS-jakelu RPM repositories`_ to setup necessary software sources.
+
+.. _configure the PAS-jakelu RPM repositories: https://www.digitalpreservation.fi/user_guide/installation_of_tools 
+
+After the repository has been added, the package can be installed by running the following command::
+
+    sudo dnf install python3-xml-helpers
+
+Installation using Python Virtualenv for development purposes
+-------------------------------------------------------------
 
 Create a virtual environment::
     
