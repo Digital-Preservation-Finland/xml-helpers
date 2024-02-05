@@ -142,16 +142,24 @@ def ensure_text(text, encoding='utf-8', errors='strict'):
     raise TypeError("not expecting type '%s'" % type(text))
 
 
-def iter_elements(filename):
+def iter_elements(source):
     """
-    Iterate through all elements in xml tree.
+    Iterate over all elements in given XML file object.
 
-    :yields: elements
+    NOTE: This is memory efficient implementation, using LXML iterparse, and
+    yields each individual element without it's child tree. It is suitable for
+    inspecting element attributes within the yielded elements. Yielded elements
+    are removed from tree after end tag and requires maintaining external
+    references to keep in memory.
+
+    :source: Filename or file-like objectt d
+    :yields: elements as lxml.ElementTree objects
+
     """
     stack = []
     events = ["start", "end"]
 
-    for event, element in ET.iterparse(filename, events=events):
+    for event, element in ET.iterparse(source, events=events):
 
         if event == 'start':
             stack.append(element)

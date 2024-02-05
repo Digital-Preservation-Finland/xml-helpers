@@ -1,5 +1,8 @@
 """Test for XML utils"""
 
+from resource import getrusage, RUSAGE_SELF
+from io import BytesIO
+
 from datetime import datetime
 
 import lxml.etree as ET
@@ -101,3 +104,37 @@ def test_ensure_text(text, valid):
     else:
         with pytest.raises(TypeError):
             u.ensure_text(text)
+
+
+def test_iter_elements_utf8_file(utf8_file):
+    """Test the `iter_elements()` function"""
+    elements = list(u.iter_elements(utf8_file))
+    assert len(elements) == 7
+
+    for element in elements:
+        assert element.tag
+        assert element.text
+
+
+def test_iter_elements_rss():
+    """Test memory usage is limiited for the `iter_elements()` function.
+    """
+
+    xmldata = BytesIO("\n".join(
+        ['<?xml version="1.0" encoding="UTF-8" ?>'] +
+        ['<data>'] +
+        [f'<name value="value {value}">text {value}</name>'
+         for value in range(10000)] +
+        ['</data>']
+    ).encode("utf-8"))
+
+    element_count = 0
+    rss_before = getrusage(RUSAGE_SELF).ru_maxrss
+
+    for element in u.iter_elements(xmldata):
+        assert element.tag
+        rss_usage = getrusage(RUSAGE_SELF).ru_maxrss - rss_before
+        assert rss_usage < 1  # KiB
+        element_count += 1
+
+    assert element_count == 10001
