@@ -1,6 +1,11 @@
 Release notes
 =============
 
+Unreleased
+----------
+
+- Add a memory efficient implementation for iterating over all elements in a given XML file object
+
 Version 0.16
 ------------
 

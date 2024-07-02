@@ -152,7 +152,7 @@ def iter_elements(source):
     are removed from tree after end tag and requires maintaining external
     references to keep in memory.
 
-    :source: Filename or file-like objectt d
+    :source: Filename or file-like object
     :yields: elements as lxml.ElementTree objects
 
     """

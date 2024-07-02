@@ -117,7 +117,7 @@ def test_iter_elements_utf8_file(utf8_file):
 
 
 def test_iter_elements_rss():
-    """Test memory usage is limiited for the `iter_elements()` function.
+    """Test memory usage is limited for the `iter_elements()` function.
     """
 
     xmldata = BytesIO("\n".join(
