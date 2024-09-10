@@ -156,4 +156,7 @@ def iter_elements(source):
     """
     for _, element in ET.iterparse(source):
         yield element
-        element.clear(keep_tail=True)
+        try:
+            element.clear(keep_tail=True)
+        except TypeError:  # lxml<4.4.0 (CentOS 7)
+            element.clear()
