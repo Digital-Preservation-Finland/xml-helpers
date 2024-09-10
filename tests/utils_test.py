@@ -108,12 +108,13 @@ def test_ensure_text(text, valid):
 
 def test_iter_elements_utf8_file(utf8_file):
     """Test the `iter_elements()` function"""
-    elements = list(u.iter_elements(utf8_file))
-    assert len(elements) == 7
-
-    for element in elements:
+    elem_count = 0
+    for element in u.iter_elements(utf8_file):
         assert element.tag
         assert element.text
+        elem_count += 1
+
+    assert elem_count == 7
 
 
 def test_iter_elements_rss():
@@ -123,7 +124,7 @@ def test_iter_elements_rss():
     xmldata = BytesIO("\n".join(
         ['<?xml version="1.0" encoding="UTF-8" ?>'] +
         ['<data>'] +
-        [f'<name value="value {value}">text {value}</name>'
+        [f'<name value="value {value}">text {str(value)*100}</name>'
          for value in range(10000)] +
         ['</data>']
     ).encode("utf-8"))

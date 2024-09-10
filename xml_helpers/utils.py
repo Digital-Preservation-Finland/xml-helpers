@@ -144,30 +144,16 @@ def ensure_text(text, encoding='utf-8', errors='strict'):
 
 def iter_elements(source):
     """
-    Iterate over all elements in given XML file object.
+    Iterate over all elements in a given XML file object. Clear elements during
+    the iteration to reduce the function's memory footprint.
 
-    NOTE: This is memory efficient implementation, using LXML iterparse, and
-    yields each individual element without it's child tree. It is suitable for
-    inspecting element attributes within the yielded elements. Yielded elements
-    are removed from tree after end tag and requires maintaining external
-    references to keep in memory.
+    NOTE: Because we clear elements during the iteration, you can't call
+    list(iter_elements) and expect it to create a list of all the elements!
 
     :source: Filename or file-like object
     :yields: elements as lxml.ElementTree objects
 
     """
-    stack = []
-    events = ["start", "end"]
-
-    for event, element in ET.iterparse(source, events=events):
-
-        if event == 'start':
-            stack.append(element)
-            continue
-
-        stack.pop()
-
+    for _, element in ET.iterparse(source):
         yield element
-
-        if stack:
-            stack[-1].remove(element)
+        element.clear(keep_tail=True)
