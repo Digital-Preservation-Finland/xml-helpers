@@ -1,6 +1,12 @@
 Release notes
 =============
 
+Version 0.18
+----------
+
+- Fix XML parsing crashes, which happened in some cases where XML elements with
+  children were removed.
+
 Version 0.17
 ----------
 
