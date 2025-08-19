@@ -12,7 +12,9 @@ XML_NS = 'http://www.w3.org/XML/1998/namespace'
 
 def readfile(filename):
     """Read file, remove blanks and comments"""
-    xmlparser = ET.XMLParser(remove_blank_text=True, remove_comments=True)
+    xmlparser = ET.XMLParser(
+        remove_blank_text=True, remove_comments=True, resolve_entities=False
+    )
     return ET.parse(filename, parser=xmlparser)
 
 
