@@ -1,14 +1,19 @@
 Release notes
 =============
 
+Version 1.0.0
+-------------
+
+- SonarQube fixes
+
 Version 0.18
-----------
+------------
 
 - Fix XML parsing crashes, which happened in some cases where XML elements with
   children were removed.
 
 Version 0.17
-----------
+------------
 
 - Add a memory efficient implementation for iterating over all elements in a given XML file object
 
